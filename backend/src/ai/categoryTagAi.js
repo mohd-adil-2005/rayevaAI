@@ -44,7 +44,7 @@ function validateOutput(data) {
 }
 
 export async function generateCategoryAndTags(name, description) {
-  // Optional mock mode so the app works even without OpenAI quota.
+  // Optional mock mode so the app works even without external LLM quota.
   if (config.useMockAi) {
     const structured = validateOutput({
       primary_category: 'Home & Cleaning',

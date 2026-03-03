@@ -1,11 +1,12 @@
 import { config } from '../config.js';
 
 /**
- * Lightweight Gemini client that mimics the subset of the OpenAI SDK we use:
- * client.chat.completions.create({ model, messages, temperature })
+ * Lightweight Gemini client that implements the subset of a chat-completions
+ * interface we need:
+ *   client.chat.completions.create({ model, messages, temperature })
  *
- * We map OpenAI-style chat messages to Gemini's generateContent format and then
- * map the response back to an OpenAI-like shape.
+ * It maps our chat-style messages to Gemini's generateContent format and then
+ * maps the response back to a similar shape.
  */
 class GeminiClient {
   constructor(apiKey) {

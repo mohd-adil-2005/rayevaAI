@@ -1,23 +1,33 @@
 # Rayeva AI – Sustainable Commerce (MERN)
 
-Fullstack MERN implementation of the Rayeva AI Systems Assignment: **Module 1** (AI Auto-Category & Tag Generator) and **Module 2** (AI B2B Proposal Generator) fully implemented; **Module 3** and **Module 4** architecture outlined below.
+> AI‑powered catalog enrichment and B2B proposal generation for sustainable commerce.
 
-## Tech Stack
+[![Tech Stack](https://img.shields.io/badge/Stack-MERN-00c853?style=for-the-badge)](https://github.com/mohd-adil-2005/rayevaAI)
+[![Backend](https://img.shields.io/badge/API-Express%20%2B%20MongoDB-1e88e5?style=for-the-badge)](https://github.com/mohd-adil-2005/rayevaAI/tree/master/backend)
+[![Frontend](https://img.shields.io/badge/UI-React%20%2B%20Vite-ffb300?style=for-the-badge)](https://github.com/mohd-adil-2005/rayevaAI/tree/master/frontend)
 
-- **M**ongoDB – catalog, proposals, AI logs
-- **E**xpress – REST API, env-based config, error handling
-- **R**eact – Vite app, Category/Tag and Proposal UIs
-- **N**ode.js – backend runtime
+---
 
-AI: OpenAI API (gpt-4o-mini) with prompt/response logging, structured JSON outputs, and clear separation between AI and business logic.
+### What this project delivers
 
-## Quick Start
+- **Module 1 – AI Auto‑Category & Tag Generator**:  
+  Given a product name + description, the system assigns a **primary category** (from a fixed list), suggests a **sub‑category**, generates **5–10 SEO tags**, and adds **sustainability filters** (plastic‑free, compostable, etc.). Result is stored as structured JSON in MongoDB.
+- **Module 2 – AI B2B Proposal Generator**:  
+  For a client budget, it creates a **sustainable product mix**, **budget allocation**, **cost breakdown**, and **impact positioning summary**, again stored as structured JSON.
+- **Modules 3 & 4 – Architecture only** (as per assignment):  
+  Detailed designs for **Impact Reporting** and **WhatsApp Support Bot** are documented below.
+
+The app is built to look and feel like a real internal tool: modern React UI on top of a structured Express + MongoDB backend with an LLM provider (Gemini‑compatible) plugged in behind a clean abstraction.
+
+---
+
+## Quick Start (Local)
 
 1. **Backend**
    ```bash
    cd backend
    cp .env.example .env
-   # Set OPENAI_API_KEY and MONGODB_URI in .env
+   # Set OPENAI_API_KEY (LLM key) and MONGODB_URI in .env
    npm install
    npm run dev
    ```
@@ -34,6 +44,17 @@ AI: OpenAI API (gpt-4o-mini) with prompt/response logging, structured JSON outpu
 3. **MongoDB**  
    Ensure MongoDB is running locally (or set `MONGODB_URI` to your Atlas URI).
 
+---
+
+## Tech Stack
+
+- **M**ongoDB – catalog, proposals, AI logs
+- **E**xpress – REST API, env-based config, error handling
+- **R**eact – Vite app, Category/Tag and Proposal UIs
+- **N**ode.js – backend runtime
+
+AI: LLM provider (Gemini‑compatible) with prompt/response logging, structured JSON outputs, and clear separation between AI and business logic.
+
 ## Project Structure
 
 ```
@@ -44,7 +65,7 @@ rayevaAI/
 │   │   ├── index.js           # Express app, CORS, routes
 │   │   ├── db/connection.js   # Mongoose connect
 │   │   ├── models/            # ProductCatalog, Proposal, AiLog
-│   │   ├── ai/                # OpenAI client, logger, categoryTagAi, proposalAi
+│   │   ├── ai/                # LLM client, logger, categoryTagAi, proposalAi
 │   │   └── routes/            # categoryTag.js, proposal.js
 │   └── .env.example
 ├── frontend/
@@ -55,7 +76,9 @@ rayevaAI/
 └── README.md
 ```
 
-## API (Backend)
+---
+
+## Backend API
 
 - `POST /api/category-tag/generate` – body: `{ name, description? }` → create product with AI category, sub-category, 5–10 SEO tags, sustainability filters; stored in MongoDB.
 - `GET /api/category-tag/products` – list products (optional `?limit=50`).
@@ -64,7 +87,9 @@ rayevaAI/
 - `GET /api/proposal` – list proposals.
 - `GET /api/proposal/:id` – get one proposal.
 
-## Technical Requirements (Assignment)
+---
+
+## How the Assignment Requirements Are Met
 
 - **Structured JSON outputs** – Both modules return and store structured JSON (category/tags and proposal fields).
 - **Prompt + response logging** – Every AI call is logged in `AiLog` (module, prompt_text, response_text, metadata, success, error_message).
@@ -72,10 +97,16 @@ rayevaAI/
 - **Separation of AI and business logic** – `backend/src/ai/` holds only LLM calls and parsing; routes and models handle validation and DB.
 - **Error handling and validation** – Input validation in routes; try/catch and appropriate HTTP status codes; AI errors logged and surfaced to client.
 
+---
+
 ## AI Prompt Design
 
 - **Module 1 (Category & Tags):** System prompt defines the exact list of primary categories and instructs the model to return one category, one sub-category, 5–10 SEO tags, and applicable sustainability filters. Response is parsed as JSON and validated (e.g. category fallback to "Other" if not in list).
 - **Module 2 (Proposal):** System prompt defines the required JSON shape (suggested_product_mix, budget_allocation, cost_breakdown, impact_positioning_summary) and constraints (total ≤ budget, percentages sum to 100). Response is parsed and stored as-is for audit.
+
+
+
+
 
 ## Architecture Outline: Module 3 (AI Impact Reporting Generator)
 
@@ -88,6 +119,12 @@ rayevaAI/
   - One AI call (or template + logic) to produce a short human-readable impact statement; store it on the order document.
 - **API:** e.g. `POST /api/orders` (create order) triggers impact computation and statement generation; `GET /api/orders/:id` returns order with `impact_statement` and breakdown (plastic_saved, carbon_avoided, local_summary).
 - **Frontend:** Order detail page showing impact statement and metrics.
+
+
+
+
+
+
 
 ## Architecture Outline: Module 4 (AI WhatsApp Support Bot)
 
@@ -102,8 +139,3 @@ rayevaAI/
 - **AI:** One LLM call for intent classification + optional response generation for policy Q&A; order status and escalation are business logic (DB + rules). Keep prompts short and response format structured (e.g. JSON with intent and suggested reply).
 - **Security:** Validate webhook signature; never expose internal DB or API keys to client; store only necessary PII in logs.
 
-## Submission Checklist
-
-- [x] GitHub repository (you can push this folder).
-- [x] README with architecture overview and AI prompt design.
-- [ ] 3–5 minute demo video (record locally and upload).

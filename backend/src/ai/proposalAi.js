@@ -32,7 +32,7 @@ function parseJson(raw) {
 }
 
 export async function generateProposal(budgetLimit, clientName, preferences) {
-  // Optional mock mode so the app works even without OpenAI quota.
+  // Optional mock mode so the app works even without external LLM quota.
   if (config.useMockAi) {
     const structured = {
       suggested_product_mix: [
@@ -53,7 +53,7 @@ export async function generateProposal(budgetLimit, clientName, preferences) {
         total: budgetLimit,
       },
       impact_positioning_summary:
-        'This is a mock proposal to let you demo the UI without consuming real OpenAI quota.',
+        'This is a mock proposal to let you demo the UI without consuming real external LLM quota.',
     };
     const raw = JSON.stringify(structured, null, 2);
     await logAiCall({
